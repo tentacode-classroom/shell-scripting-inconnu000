@@ -1,22 +1,40 @@
 #!/bin/bash
 
+CURRENT_DIRECTORY=`dirname $0`
+echo current : $CURRENT_DIRECTORY
+
 echo "préparation du dossier clean"
-rm -rf ./bazar_clean 
-mkdir ./bazar_clean bazar_clean/divers bazar_clean/images bazar_clean/videos 
-mkdir -p ./bazar_clean/images/2018/{1..12}
+rm -rf $CURRENT_DIRECTORY/bazar_clean 
+mkdir $CURRENT_DIRECTORY/bazar_clean bazar_clean/divers bazar_clean/images bazar_clean/videos 
+mkdir -p $CURRENT_DIRECTORY/bazar_clean/images
 
 echo $1
 
-FILES=`find ./bazar -type f`
+FILES=`find $CURRENT_DIRECTORY/bazar -type f`
 
 echo ""
-echo "Fichiers à transférer :"
+
 
 for FILE in $FILES
 do
+	echo "Fichier à transférer :"
 	echo $FILE
-	if [file $FILE | grep 'image data']
+	echo ""
+	STAT=`file $FILE | grep 'image data'`
+	if [ $? == 0 ]
 	then
+		echo "Image détectée: transfert dans le dossier images"
+		cp $FILE $CURRENT_DIRECTORY/bazar_clean/images
 	else
+		STAT=`file $FILE | grep 'movie'`
+		if [ $? == 0 ]
+		then
+			echo "Vidéo détectée: transfert dans le dossier videos"
+			cp $FILE $CURRENT_DIRECTORY/bazar_clean/videos
+		else
+			echo "Pas d'extention spécifique détectée: transfert dans le dossier divers"
+			cp $FILE $CURRENT_DIRECTORY/bazar_clean/divers
+		fi
 	fi
+	echo ""
 done
