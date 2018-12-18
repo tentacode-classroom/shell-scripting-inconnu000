@@ -26,7 +26,7 @@ do
 		echo "Image détectée: transfert dans le dossier images"
 		cp $FILE $CURRENT_DIRECTORY/bazar_clean/images
 	else
-		STAT=`file $FILE | grep 'movie'`
+		STAT=`file $FILE | grep 'Media'`
 		if [ $? == 0 ]
 		then
 			echo "Vidéo détectée: transfert dans le dossier videos"
